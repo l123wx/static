@@ -17,7 +17,9 @@ function initGa {
 
 (function() {
   if (!ga) {
+    console.log(ga)
     await initGa()
+    console.log(ga)
   }
 
   ga(function (tracker) {
