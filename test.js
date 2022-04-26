@@ -57,7 +57,7 @@ function categoryPageViewEvent() {
 function initEventListener() {
 
   Shopline.event.on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
-    record_user_event("category-page-view", {
+    record_user_event("add-to-cart", {
       // TODO: cart-id 不知道怎么获取
       cartId: "cart-id",
       productDetails: [
