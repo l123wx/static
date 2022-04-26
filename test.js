@@ -36,37 +36,26 @@ function initGa() {
     "visitorId": await getClientId(),
   }
   
-  // record_user_event(user_event);
+  record_user_event(user_event);
 
-  // function record_user_event(user_event, options) {
-  //   return new Promise(resolve => {
-  //     var _gre = _gre || [];
-  //     // Credentials for project.
-  //     _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
-  //     _gre.push(['logEvent', user_event]);
-  //     _gre.push(['projectId', 'shopai001']);
-  //     _gre.push(['locationId', 'global']);
-  //     _gre.push(['catalogId', 'default_catalog']);
-  //     window._gre = _gre;
-  //     (function () {
-  //       var gre = document.createElement('script')
-  //       gre.type = 'text/javascript'; gre.async = true;
-  //       gre.src = 'https://www.gstatic.com/retail/v2_event.js';
-  //       var s = document.getElementsByTagName('script')[0];
-  //       s.parentNode.insertBefore(gre, s);
-  //       s.onload = resolve;
-  //     })();
-  //   })
-  // }
-
-  function behavior(action, label, value) {
-    if (value === undefined) {
-      window.ga && window.ga('send', 'event', 'category', action, label)
-    } else {
-      window.ga && window.ga('send', 'event', 'category', action, label, value)
-    }
+  function record_user_event(user_event, options) {
+    return new Promise(resolve => {
+      var _gre = _gre || [];
+      // Credentials for project.
+      _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
+      _gre.push(['logEvent', user_event]);
+      _gre.push(['projectId', 'shopai001']);
+      _gre.push(['locationId', 'global']);
+      _gre.push(['catalogId', 'default_catalog']);
+      window._gre = _gre;
+      (function () {
+        var gre = document.createElement('script')
+        gre.type = 'text/javascript'; gre.async = true;
+        gre.src = 'https://www.gstatic.com/retail/v2_event.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gre, s);
+        s.onload = resolve;
+      })();
+    })
   }
-
-  behavior('点击数', '记录', '+1')
-
 })()
