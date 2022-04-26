@@ -3,7 +3,8 @@ console.log(Shopline);
 
 (function() {
   initGa(() => {
-    // initEvent(Shopline.uri.alias)
+    // triggerViewEvent(Shopline.uri.alias)
+    // initEventListener()
   })
 })()
 
@@ -20,43 +21,55 @@ function initGa(cb) {
   }
 }
 
-function initEvent(type) {
+function triggerViewEvent(type) {
   switch(type) {
-    case 'index': indexEvent();
-    break;
-    case 'ProductsDetail': productEvent();
-    break;
+    case 'Home': homePageViewEvent()
+    break
+    case 'ProductsDetail': detailPageViewEvent()
+    break
+    case 'Products': categoryPageViewEvent()
+    break
   }
 }
 
-function indexEvent() {
+function homePageViewEvent() {
   record_user_event("home-page-view");
 }
 
-function productsDetailEvent() {
-  record_user_event("detail-page-view",
-    {
-      "productDetails": [
+function detailPageViewEvent() {
+  Shopline.event.on('DataReport::ViewContent', function({ content_spu_id: productId }) {
+    record_user_event("detail-page-view", {
+      productDetails: [
         {
-          "product": {
-            "id": '{{product.id}}'
+          product: {
+            id: productId
           }
         }
       ]
-    }
-  )
-}
-
-function eventLog(eventName) {
-  Shopline.event.on(eventName, function() {
-    console.log(eventName, arguments)
+    })
   })
 }
 
-Object.keys(Shopline.event._caches).forEach(item => eventLog(item))
+function categoryPageViewEvent() {
+  record_user_event("category-page-view", {
+    // TODO: 这个参数应该写什么
+    pageCategories: ["bestSellers"]
+  });
+}
+
+function initEventListener() {
+  const eventOn = Shopline.event.on
 
 
-// TODO: params 应该放哪
+  eventOn('', function() {
+
+  })
+
+  eventOn('', function() {
+
+  })
+}
+
 function record_user_event(eventType, params = {}) {
   let clientId;
 
@@ -70,6 +83,7 @@ function record_user_event(eventType, params = {}) {
   event(clientId)
 
   function event(clientId) {
+    console.log(eventType)
     var _gre = _gre || [];
     // Credentials for project.
     _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
@@ -90,11 +104,22 @@ function record_user_event(eventType, params = {}) {
 
 function getClientId(cb) {
   window.ga(function (tracker) {
-    clientId = tracker.get('clientId');
+    clientId = tracker.get('clientId')
     cb(clientId)
   })
 }
 
+
+
+
+function eventLog(eventName) {
+  Shopline.event.on(eventName, function() {
+    console.log(eventName, arguments)
+  })
+}
+
+Object.keys(Shopline.event._caches).forEach(item => eventLog(item))
+Object.keys(Shopline.event._event).forEach(item => eventLog(item))
 
 // <!-- home-page-view -->
 // {% if request.page_type=='index' %}
