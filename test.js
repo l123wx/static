@@ -8,7 +8,7 @@ function initGa() {
          }, i[r].l = 1 * new Date(); a = s.createElement(o),
            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = resolve;
        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-      ga('create', GTAG_ID, 'auto');
+      window.ga('create', GTAG_ID, 'auto');
     } catch (err) {
       reject(err)
     }
@@ -16,20 +16,26 @@ function initGa() {
 }
 
 (async function() {
-  console.log(ga)
-  if (!ga) {
-    console.log(ga)
+  if (!window.ga) {
+    console.log(window.ga)
     await initGa()
-    console.log(ga)
+    console.log(window.ga)
   }
 
-  ga(function (tracker) {
-    clientId = tracker.get('clientId');
-  })
+
+  
+  function getClientId() {
+    return new Promise(resolve => {
+        window.ga(function (tracker) {
+          clientId = tracker.get('clientId');
+          resolve(clientId)
+        })
+    })
+  }
 
   var user_event = {
     "eventType":  "home-page-view",
-    "visitorId": clientId,
+    "visitorId": await getClientId(),
   }
   record_user_event(user_event, options);
 
