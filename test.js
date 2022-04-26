@@ -16,6 +16,7 @@ function initGa() {
 }
 
 (async function() {
+  console.log(ga)
   if (!ga) {
     console.log(ga)
     await initGa()
