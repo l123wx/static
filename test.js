@@ -1,4 +1,4 @@
-function initGa {
+function initGa() {
   return new Promise((resolve, reject) => {
     try {
       var GTAG_ID = 'G-HP0GTQL69G'; 
@@ -12,10 +12,10 @@ function initGa {
     } catch (err) {
       reject(err)
     }
-  }})
+  })
 }
 
-(function() {
+(async function() {
   if (!ga) {
     console.log(ga)
     await initGa()
@@ -24,12 +24,12 @@ function initGa {
 
   ga(function (tracker) {
     clientId = tracker.get('clientId');
-  }
+  })
 
   var user_event = {
-      "eventType":  "home-page-view",
-      "visitorId": clientId,
-   }
+    "eventType":  "home-page-view",
+    "visitorId": clientId,
+  }
   record_user_event(user_event, options);
 
   function record_user_event(user_event, options) {
