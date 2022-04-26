@@ -119,7 +119,7 @@ function eventLog(eventName) {
 }
 
 Object.keys(Shopline.event._caches).forEach(item => eventLog(item))
-Object.keys(Shopline.event._event).forEach(item => eventLog(item))
+Object.keys(Shopline.event._events).forEach(item => eventLog(item))
 
 // <!-- home-page-view -->
 // {% if request.page_type=='index' %}
