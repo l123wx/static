@@ -1,10 +1,7 @@
-console.log(Shopline.uri)
-console.log(Shopline);
-
 (function() {
   initGa(() => {
-    // triggerViewEvent(Shopline.uri.alias)
-    // initEventListener()
+    triggerViewEvent(Shopline.uri.alias)
+    initEventListener()
   })
 })()
 
@@ -37,7 +34,7 @@ function homePageViewEvent() {
 }
 
 function detailPageViewEvent() {
-  Shopline.event.on('DataReport::ViewContent', function({ content_spu_id: productId }) {
+  Shopline.event.on('DataReport::ViewContent', function({ data: { content_spu_id: productId } }) {
     record_user_event("detail-page-view", {
       productDetails: [
         {
@@ -58,16 +55,42 @@ function categoryPageViewEvent() {
 }
 
 function initEventListener() {
-  const eventOn = Shopline.event.on
+  const $on = Shopline.event.on
 
-
-  eventOn('', function() {
-
+  $on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
+    record_user_event("category-page-view", {
+      // TODO: cart-id 不知道怎么获取
+      cartId: "cart-id",
+      productDetails: [
+        {
+          product: {
+            id: productId
+          },
+          quantity: quantity
+        }
+      ]
+    })
   })
 
-  eventOn('', function() {
 
-  })
+  // TODO: 结账完成应该绑定什么事件呢
+  // $on('', function({ data: {currency, totalPrice, contents}}) {
+  //   record_user_event("purchase-complete", {
+  //     productDetails: contents.map(({ content_spu_id: productId, quantity }) => {
+  //       return {
+  //         product: {
+  //           id: productId
+  //         },
+  //         quantity: quantity
+  //       }
+  //     }),
+  //     purchaseTransaction: {
+  //       // TODO: 与交易相关的非零总收入或总计
+  //       revenue: totalPrice,
+  //       currencyCode: currency
+  //     }
+  //   })
+  // })
 }
 
 function record_user_event(eventType, params = {}) {
@@ -110,8 +133,10 @@ function getClientId(cb) {
 }
 
 
+console.log(Shopline.uri)
+console.log(Shopline);
 
-
+// 测试用，用于查看什么时候回触发什么事件，返回什么参数
 function eventLog(eventName) {
   Shopline.event.on(eventName, function() {
     console.log(eventName, arguments)
@@ -120,72 +145,3 @@ function eventLog(eventName) {
 
 Object.keys(Shopline.event._caches).forEach(item => eventLog(item))
 Object.keys(Shopline.event._events).forEach(item => eventLog(item))
-
-// <!-- home-page-view -->
-// {% if request.page_type=='index' %}
-// <script>
-//   record_tag({
-//   "eventType": "home-page-view",
-//   "visitorId": "visitor-id",
-// })
-// </script>
-// {% endif %}
-
-// <!-- detail-page-view -->
-// {% if request.page_type=='product' %}
-// <script>
-//   record_tag({
-  // "eventType": "detail-page-view",
-  // "visitorId": "visitor-id",
-  // "productDetails": [{
-  //   "product": {
-  //     "id": "product-id"
-  //   }
-  // })
-// </script>
-// {% endif %}
-
-// <!-- category-page-view -->
-// {% if request.page_type=='collection' %}
-// <script>
-//   record_tag('category-page-view', {
-//   "pageCategories": ["category1 > category2"]
-//     "pageCategories": ["Jewelry"]//["{{ collection.current_type | downcase }}"]
-//   })
-// </script>
-// {% endif %}
-
-// <!-- search -->
-// {% if request.page_type=='search' %}
-// <script>
-//   record_tag('search', {
-//     "searchQuery": "{{search.terms}}"
-//   })
-// </script>
-// {% endif %}
-
-// <!-- shopping-cart-page-view -->
-// {% if request.page_type=='cart' %}
-// <script>
-//   record_tag('shopping-cart-page-view', {
-//     "productDetails": [{
-//       'product': {
-//         'id': '{{product.id}}'
-//       }
-//     }]
-//   })
-// </script>
-// {% endif %}
-
-// <!-- add-to-cart -->
-// {% if request.page_type=='blog' %}
-// <script>
-//   record_tag('add-to-cart', {
-//     "productDetails": [{
-//       "product": {
-//         "id": "product-id"
-//       },
-//       "quantity": ""
-//     }]
-//   })
-// </script>
