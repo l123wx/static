@@ -67,6 +67,6 @@ function initGa() {
     }
   }
 
-  this.$behavior('点击数', '记录', '+1')
+  behavior('点击数', '记录', '+1')
 
 })()
