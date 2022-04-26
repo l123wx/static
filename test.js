@@ -16,13 +16,11 @@ function initGa() {
 }
 
 (async function() {
+  console.log(window.ga)
   if (!window.ga) {
-    console.log(window.ga)
     await initGa()
     console.log(window.ga)
   }
-
-
   
   function getClientId() {
     return new Promise(resolve => {
@@ -37,23 +35,27 @@ function initGa() {
     "eventType":  "home-page-view",
     "visitorId": await getClientId(),
   }
-  record_user_event(user_event, options);
+  
+  record_user_event(user_event);
 
   function record_user_event(user_event, options) {
-     var _gre = _gre || [];
-     // Credentials for project.
-     _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
-     _gre.push(['logEvent', user_event]);
-     _gre.push(['projectId', 'shopai001']);
-     _gre.push(['locationId', 'global']);
-     _gre.push(['catalogId', 'default_catalog']);
-     window._gre = _gre;
-     (function () {
-       var gre = document.createElement('script')
-       gre.type = 'text/javascript'; gre.async = true;
-       gre.src = 'https://www.gstatic.com/retail/v2_event.js';
-       var s = document.getElementsByTagName('script')[0];
-       s.parentNode.insertBefore(gre, s);
-     })();
-   }
+    return new Promise(resolve => {
+      var _gre = _gre || [];
+      // Credentials for project.
+      _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
+      _gre.push(['logEvent', user_event]);
+      _gre.push(['projectId', 'shopai001']);
+      _gre.push(['locationId', 'global']);
+      _gre.push(['catalogId', 'default_catalog']);
+      window._gre = _gre;
+      (function () {
+        var gre = document.createElement('script')
+        gre.type = 'text/javascript'; gre.async = true;
+        gre.src = 'https://www.gstatic.com/retail/v2_event.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gre, s);
+        s.onload = resolve;
+      })();
+    })
+  }
 })()
