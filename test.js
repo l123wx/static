@@ -1,5 +1,5 @@
 console.log(Shopline.uri)
-console.log(Shopline)
+console.log(Shopline);
 
 (function() {
   initGa(() => {
