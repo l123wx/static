@@ -55,9 +55,8 @@ function categoryPageViewEvent() {
 }
 
 function initEventListener() {
-  const $on = Shopline.event.on
 
-  $on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
+  Shopline.event.on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
     record_user_event("category-page-view", {
       // TODO: cart-id 不知道怎么获取
       cartId: "cart-id",
@@ -74,7 +73,7 @@ function initEventListener() {
 
 
   // TODO: 结账完成应该绑定什么事件呢
-  // $on('', function({ data: {currency, totalPrice, contents}}) {
+  // Shopline.event.on('', function({ data: {currency, totalPrice, contents}}) {
   //   record_user_event("purchase-complete", {
   //     productDetails: contents.map(({ content_spu_id: productId, quantity }) => {
   //       return {
