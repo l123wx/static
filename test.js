@@ -92,21 +92,15 @@ function record_user_event(eventType, params = {}) {
   event(clientId)
 
   function event(clientId) {
-    console.log(eventType)
-    var _gre = _gre || [];
-    _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
-    _gre.push(['logEvent', {eventType, visitorId: clientId, ...params}]);
-    _gre.push(['projectId', 'shopai001']);
-    _gre.push(['locationId', 'global']);
-    _gre.push(['catalogId', 'default_catalog']);
-    window._gre = _gre;
-    (function () {
-      var gre = document.createElement('script')
-      gre.type = 'text/javascript'; gre.async = true;
-      gre.src = 'https://www.gstatic.com/retail/v2_event.js';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(gre, s);
-    })();
+    fetch({
+      url: 'https://us-central1-shopai001.cloudfunctions.net/shopai_event',
+      method: 'POST',
+      data: {
+        eventType,
+        visitorId: clientId,
+        ...params
+      }
+    })
   }
 }
 
