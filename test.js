@@ -95,7 +95,7 @@ function record_user_event(eventType, params = {}) {
     fetch('https://us-central1-shopai001.cloudfunctions.net/shopai_event', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json; charset=utf-8'
       },
       body: JSON.stringify({
         eventType,
