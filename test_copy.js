@@ -24,6 +24,8 @@ function triggerViewEvent(type) {
     break
     case 'ProductsDetail': detailPageViewEvent()
     break
+    // case 'Products': categoryPageViewEvent()
+    // break
   }
 }
 
@@ -45,9 +47,17 @@ function detailPageViewEvent() {
   })
 }
 
+// function categoryPageViewEvent() {
+//   record_user_event("category-page-view", {
+//     // TODO: 这个参数应该写什么
+//     pageCategories: ["bestSellers"]
+//   });
+// }
+
 function initEventListener() {
   Shopline.event.on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
     record_user_event("add-to-cart", {
+      // TODO: cart-id
       cartId: "cart-id",
       productDetails: [
         {
@@ -94,6 +104,7 @@ function record_user_event(eventType, params = {}) {
   function event(clientId) {
     console.log(eventType)
     var _gre = _gre || [];
+    // Credentials for project.
     _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
     _gre.push(['logEvent', {eventType, visitorId: clientId, ...params}]);
     _gre.push(['projectId', 'shopai001']);
@@ -116,3 +127,17 @@ function getClientId(cb) {
     cb(clientId)
   })
 }
+
+
+console.log(Shopline.uri)
+console.log(Shopline);
+
+// 测试用，用于查看什么时候回触发什么事件，返回什么参数
+function eventLog(eventName) {
+  Shopline.event.on(eventName, function() {
+    console.log(eventName, arguments)
+  })
+}
+
+Object.keys(Shopline.event._caches).forEach(item => eventLog(item))
+Object.keys(Shopline.event._events).forEach(item => eventLog(item))
