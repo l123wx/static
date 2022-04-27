@@ -91,13 +91,12 @@ function record_user_event(eventType, params = {}) {
 
   event(clientId)
 
-  function event(clientId) {
-    fetch({
-      url: 'https://us-central1-shopai001.cloudfunctions.net/shopai_event',
+  function event(_clientId) {
+    fetch('https://us-central1-shopai001.cloudfunctions.net/shopai_event', {
       method: 'POST',
       data: {
         eventType,
-        visitorId: clientId,
+        visitorId: _clientId,
         ...params
       }
     })
