@@ -24,8 +24,8 @@ function triggerViewEvent(type) {
     break
     case 'ProductsDetail': detailPageViewEvent()
     break
-    case 'Products': categoryPageViewEvent()
-    break
+    // case 'Products': categoryPageViewEvent()
+    // break
   }
 }
 
@@ -47,18 +47,17 @@ function detailPageViewEvent() {
   })
 }
 
-function categoryPageViewEvent() {
-  record_user_event("category-page-view", {
-    // TODO: 这个参数应该写什么
-    pageCategories: ["bestSellers"]
-  });
-}
+// function categoryPageViewEvent() {
+//   record_user_event("category-page-view", {
+//     // TODO: 这个参数应该写什么
+//     pageCategories: ["bestSellers"]
+//   });
+// }
 
 function initEventListener() {
-
   Shopline.event.on('DataReport::AddToCart', function({ data: { quantity, content_spu_id: productId } }) {
     record_user_event("add-to-cart", {
-      // TODO: cart-id 不知道怎么获取
+      // TODO: cart-id
       cartId: "cart-id",
       productDetails: [
         {
@@ -72,24 +71,22 @@ function initEventListener() {
   })
 
 
-  // TODO: 结账完成应该绑定什么事件呢
-  // Shopline.event.on('', function({ data: {currency, totalPrice, contents}}) {
-  //   record_user_event("purchase-complete", {
-  //     productDetails: contents.map(({ content_spu_id: productId, quantity }) => {
-  //       return {
-  //         product: {
-  //           id: productId
-  //         },
-  //         quantity: quantity
-  //       }
-  //     }),
-  //     purchaseTransaction: {
-  //       // TODO: 与交易相关的非零总收入或总计
-  //       revenue: totalPrice,
-  //       currencyCode: currency
-  //     }
-  //   })
-  // })
+  Shopline.event.on('DataReport::CompleteOrder', function({ data: {currency, value, contents}}) {
+    record_user_event("purchase-complete", {
+      productDetails: contents.map(({ content_spu_id: productId, quantity }) => {
+        return {
+          product: {
+            id: productId
+          },
+          quantity: quantity
+        }
+      }),
+      purchaseTransaction: {
+        revenue: value,
+        currencyCode: currency
+      }
+    })
+  })
 }
 
 function record_user_event(eventType, params = {}) {
@@ -109,7 +106,7 @@ function record_user_event(eventType, params = {}) {
     var _gre = _gre || [];
     // Credentials for project.
     _gre.push(['apiKey', "AIzaSyA0ZjTxdMqZjOPyWgI3DlI0Myq8tVlHPWA"]);
-    _gre.push(['logEvent', {eventType, clientId, ...params}]);
+    _gre.push(['logEvent', {eventType, visitorId: clientId, ...params}]);
     _gre.push(['projectId', 'shopai001']);
     _gre.push(['locationId', 'global']);
     _gre.push(['catalogId', 'default_catalog']);
