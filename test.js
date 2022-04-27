@@ -94,11 +94,11 @@ function record_user_event(eventType, params = {}) {
   function event(_clientId) {
     fetch('https://us-central1-shopai001.cloudfunctions.net/shopai_event', {
       method: 'POST',
-      data: {
+      body: JSON.stringify({
         eventType,
         visitorId: _clientId,
         ...params
-      }
+      })
     })
   }
 }
