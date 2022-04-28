@@ -6,16 +6,15 @@
 })()
 
 function initGa(cb) {
-  if (!window.ga) {
-    var GTAG_ID = 'G-HP0GTQL69G'; 
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = cb;
-      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-    window.ga('create', GTAG_ID, 'auto');
-  }
+  window.ga = null;
+  var GTAG_ID = 'G-HP0GTQL69G'; 
+  (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = cb;
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  window.ga('create', GTAG_ID, 'auto');
 }
 
 function triggerViewEvent(type) {
@@ -80,30 +79,32 @@ function initEventListener() {
 }
 
 function record_user_event(eventType, params = {}) {
-  let clientId;
+  let clientId = localStorage.getItem('clientId') || null;
 
   if (!clientId) {
     getClientId(function(_clientId) {
-      event(_clientId)
+      localStorage.setItem('clientId', _clientId)
+      user_event(eventType, _clientId, params)
     })
     return
   }
 
-  event(clientId)
+  user_event(eventType, clientId, params)
+}
 
-  function event(_clientId) {
-    fetch('https://us-central1-shopai001.cloudfunctions.net/shopai_event', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      },
-      body: JSON.stringify({
-        eventType,
-        visitorId: _clientId,
-        ...params
-      })
+function user_event(eventType, visitorId, params) {
+  console.log(eventType, visitorId, params)
+  fetch('https://us-central1-shopai001.cloudfunctions.net/shopai_event', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    },
+    body: JSON.stringify({
+      eventType,
+      visitorId,
+      ...params
     })
-  }
+  })
 }
 
 function getClientId(cb) {
