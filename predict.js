@@ -24,7 +24,7 @@ function initPredict() {
   })
 }
 
-function getPredict(eventType, visitorId) {
+function getPredictList(eventType, visitorId) {
   return new Promise(resolve => {
     fetch('https://us-central1-shopai001.cloudfunctions.net/predict', {
       method: 'POST',
