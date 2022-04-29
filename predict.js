@@ -10,15 +10,18 @@ function initGa(cb) {
     i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
       (i[r].q = i[r].q || []).push(arguments)
     }, i[r].l = 1 * new Date(); a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = cb;
+      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = cb; return;
   })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 's_ga');
+  cb()
   window.s_ga('create', GTAG_ID, 'auto');
 }
 
 function initPredict() {
+  console.log('initPredict')
   getClientId(async function(clientId) {
-    const productList = await getPredictList('home-page-view', clientId).data?.results || []
-    productList.forEach(productId => {
+    const productList = (await getPredictList('home-page-view', clientId)).data?.results || []
+    productList.forEach(async ({ id: productId }) => {
+      console.log(productId)
       appendProduct(await getProductInfo(productId))
     })
   })
