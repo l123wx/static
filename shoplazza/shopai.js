@@ -7,9 +7,12 @@ const Shopline = {
   }
 };
 
-window.Shoplazza.customerPrivacy.setTrackingConsent(true, hideBanner);
+window.Shoplazza.customerPrivacy.setTrackingConsent(true, function() {
+  console.log(arguments)
+});
 document.addEventListener("trackingConsentAccepted", function () {
-  console.log("trackingConsentAccepted event fired");
+  console.log(arguments)
+  console.log("trackingConsentAccepted event fired")
 });
 
 (function() {
