@@ -7,14 +7,6 @@ const Shopline = {
   }
 };
 
-window.Shoplazza.customerPrivacy.setTrackingConsent(true, function() {
-  console.log(arguments)
-});
-document.addEventListener("trackingConsentAccepted", function () {
-  console.log(arguments)
-  console.log("trackingConsentAccepted event fired")
-});
-
 (function() {
   initGa(function() {
     triggerViewEvent(Shopline.uri.alias)
@@ -47,17 +39,32 @@ function homePageViewEvent() {
 }
 
 function detailPageViewEvent() {
-  Shopline.event.on('DataReport::ViewContent', function({ data: { content_spu_id: productId } }) {
-    record_user_event("detail-page-view", {
-      productDetails: [
-        {
-          product: {
-            id: productId
-          }
+  record_user_event("detail-page-view", {
+    productDetails: [
+      {
+        product: {
+          id: getProductId()
         }
-      ]
-    })
+      }
+    ]
   })
+}
+
+function getProductId() {
+  return decodeURIComponent(getCookie('_pdv'))['product_id']
+}
+
+function getCookie(name) {
+  const cookieList = document.cookie.split('; ')
+  let result;
+  cookieList.find(item => {
+    const cookieArr = item.split('=')
+    if (cookieArr[0] === name) {
+      result = cookieArr[1]
+      return true
+    }
+  })
+  return result
 }
 
 function initEventListener() {

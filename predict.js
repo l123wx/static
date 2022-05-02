@@ -26,10 +26,9 @@ function initPredict() {
   console.log('initPredict')
   getClientId(async function(clientId) {
     removeProductList()
-    const productList = (await getPredictList('home-page-view', clientId)).data?.results || []
-    productList.forEach(async ({ id: productId }) => {
-      console.log(productId)
-      appendProduct(await getProductInfo(productId))
+    const productList = await getPredictList('home-page-view', clientId)
+    productList.forEach(item => {
+      appendProduct(item)
     })
   })
 }
@@ -47,18 +46,18 @@ function getPredictList(eventType, visitorId) {
       })
     })
     .then(response => {
-      resolve(response.json())
+      const productIdList = response.json().data?.results || []
+      resolve(getProductsInfo(productIdList))
     })
   })
 }
 
-function getProductInfo(productId) {
+function getProductsInfo(productIdList) {
   // TODO:
   return new Promise(resolve => {
-    fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productId }`)
-    .then(async response => {
-      const res = await response.json()
-      resolve(res?.data[0])
+    fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productIdList.join(',') }`)
+    .then(response => {
+      resolve(response.json().res?.data)
     })
   })
 }
