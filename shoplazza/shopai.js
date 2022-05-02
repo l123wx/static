@@ -5,7 +5,8 @@ const Shopline = {
   event: {
     on() {}
   }
-}
+};
+
 (function() {
   initGa(function() {
     triggerViewEvent(Shopline.uri.alias)
