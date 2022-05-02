@@ -7,6 +7,11 @@ const Shopline = {
   }
 };
 
+window.Shoplazza.customerPrivacy.setTrackingConsent(true, hideBanner);
+document.addEventListener("trackingConsentAccepted", function () {
+  console.log("trackingConsentAccepted event fired");
+});
+
 (function() {
   initGa(function() {
     triggerViewEvent(Shopline.uri.alias)
