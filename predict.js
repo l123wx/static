@@ -25,8 +25,8 @@ function initGa(cb) {
 function initPredict() {
   console.log('initPredict')
   getClientId(async function(clientId) {
-    removeProductList()
     const productList = await getPredictList('home-page-view', clientId)
+    removeProductList()
     productList.forEach(item => {
       appendProduct(item)
     })
@@ -45,25 +45,29 @@ function getPredictList(eventType, visitorId) {
         visitorId
       })
     })
-    .then(response => {
-      const productIdList = response.json().data?.results || []
-      resolve(getProductsInfo(productIdList))
+    .then(async response => {
+      const productIdList = (await response.json()).data?.results || []
+      resolve(await getProductsInfo(productIdList))
     })
   })
 }
 
 function getProductsInfo(productIdList) {
-  // TODO:
+  if (!productIdList.length) return []
+
+  productIdList = productIdList.map(item => {
+    return item.id
+  })
+
   return new Promise(resolve => {
     fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productIdList.join(',') }`)
-    .then(response => {
-      resolve(response.json().res?.data)
+    .then(async response => {
+      resolve((await response.json())?.data || [])
     })
   })
 }
 
 function appendProduct(productInfo) {
-  console.log(productInfo)
   const productListDom = document.querySelector('.product-list-item-parent-controller')
   productListDom.innerHTML += `
     <div class="col product-item-list">
