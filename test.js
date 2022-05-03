@@ -8,11 +8,18 @@
 function initGa(cb) {
   var GTAG_ID = 'G-HP0GTQL69G'; 
   (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date(); a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m); a.onload = cb;
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 's_ga');
+    i['GoogleAnalyticsObject'] = r;
+    if (i[r]) return cb()
+    i[r] = function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }
+    i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g; m.parentNode.insertBefore(a, m);
+    a.onload = cb;
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 's_ga');
   window.s_ga('create', GTAG_ID, 'auto');
 }
 

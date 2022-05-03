@@ -46,26 +46,11 @@ function getPredictList(eventType, visitorId) {
       })
     })
     .then(async response => {
-      const productIdList = (await response.json()).data?.results || []
-      resolve(await getProductsInfo(productIdList))
+      resolve((await response.json())?.data?.data || [])
     })
   })
 }
 
-function getProductsInfo(productIdList) {
-  if (!productIdList.length) return []
-
-  productIdList = productIdList.map(item => {
-    return item.id
-  })
-
-  return new Promise(resolve => {
-    fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productIdList.join(',') }`)
-    .then(async response => {
-      resolve((await response.json())?.data || [])
-    })
-  })
-}
 
 function appendProduct(productInfo) {
   const productListDom = document.querySelector('.product-list-item-parent-controller')

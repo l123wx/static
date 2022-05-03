@@ -25,11 +25,10 @@ function initGa(cb) {
 function initPredict() {
   console.log('initPredict')
   getClientId(async function(clientId) {
+    const productList = await getPredictList('home-page-view', clientId)
     removeProductList()
-    const productList = (await getPredictList('home-page-view', clientId)).data?.results || []
-    productList.forEach(async ({ id: productId }) => {
-      console.log(productId)
-      appendProduct(await getProductInfo(productId))
+    productList.forEach(item => {
+      appendProduct(item)
     })
   })
 }
@@ -46,25 +45,29 @@ function getPredictList(eventType, visitorId) {
         visitorId
       })
     })
-    .then(response => {
-      resolve(response.json())
+    .then(async response => {
+      const productIdList = (await response.json()).data?.results || []
+      resolve(await getProductsInfo(productIdList))
     })
   })
 }
 
-function getProductInfo(productId) {
-  // TODO:
+function getProductsInfo(productIdList) {
+  if (!productIdList.length) return []
+
+  productIdList = productIdList.map(item => {
+    return item.id
+  })
+
   return new Promise(resolve => {
-    fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productId }`)
+    fetch(`https://api.shopflex.io/auth/lin/sai/products?shop=shopflex&productIds=${ productIdList.join(',') }`)
     .then(async response => {
-      const res = await response.json()
-      resolve(res?.data[0])
+      resolve((await response.json())?.data || [])
     })
   })
 }
 
 function appendProduct(productInfo) {
-  console.log(productInfo)
   const productListDom = document.querySelector('.product-list-item-parent-controller')
   productListDom.innerHTML += `
     <div class="col product-item-list">
