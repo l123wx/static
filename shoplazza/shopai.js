@@ -51,11 +51,12 @@ function homePageViewEvent() {
 }
 
 function detailPageViewEvent() {
+  const productId = getProductId()
   record_user_event("detail-page-view", {
     productDetails: [
       {
         product: {
-          id: getProductId()
+          id: productId
         }
       }
     ]
@@ -63,7 +64,10 @@ function detailPageViewEvent() {
 }
 
 function getProductId() {
-  return decodeURIComponent(getCookie('_pdv'))['product_id']
+  const cookie_pdv = getCookie('_pdv')
+  const pdv =  decodeURIComponent(cookie_pdv)
+  console.log(cookie_pdv, pdv)
+  return pdv['product_id']
 }
 
 function getCookie(name) {
@@ -76,6 +80,7 @@ function getCookie(name) {
       return true
     }
   })
+  console.log(result)
   return result
 }
 
