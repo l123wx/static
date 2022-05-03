@@ -65,7 +65,7 @@ function detailPageViewEvent() {
 
 function getProductId() {
   const cookie_pdv = getCookie('_pdv')
-  const pdv =  decodeURIComponent(cookie_pdv)
+  const pdv =  JSON.parse(decodeURIComponent(cookie_pdv))
   console.log(cookie_pdv, pdv)
   return pdv['product_id']
 }
