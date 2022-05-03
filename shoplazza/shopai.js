@@ -67,7 +67,7 @@ function getProductId() {
   const cookie_pdv = getCookie('_pdv')
   const pdv =  JSON.parse(decodeURIComponent(cookie_pdv))
   console.log(cookie_pdv, pdv)
-  return pdv['product_id']
+  return pdv[0]['product_id']
 }
 
 function getCookie(name) {
